@@ -1,0 +1,25 @@
+name: CI
+
+on: [push, pull_request]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    env:
+      bazelVersion: ${{ matrix.bazelVersion }}
+    strategy:
+      matrix:
+        os: ['ubuntu-20.04']
+        bazel-version: ['4.0.0', '3.7.2']
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - run: 'echo $bazelVersion > .bazelversion'
+      - name: Setup bazelisk for Bazel builds
+        uses: holvonix-open/setup-bazelisk@v0.6.1
+      - run: which bazel
+      - run: bazel --version
